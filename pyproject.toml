@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-db-cascade-5"
-description = "PostgreSQL ON DELETE support for Django foreign keys (Django 5 only)"
+description = "PostgreSQL ON DELETE support for Django foreign keys (Django 5 only; expected to become obsolete in Django 6.1)"
 readme = "README.md"
 version = "0.5.0"
 authors = [{ name = "Jordan Kapelner", email = "test@test.com" }]
