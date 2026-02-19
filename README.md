@@ -1,22 +1,26 @@
-# django-db-cascade-2
+# django-db-cascade-5
 
-### Installation for Django 3
-`pip install django-db-cascade-2`
+### Installation for Django 5
 
-### Installation for Django 2
-`pip install django-db-cascade-2==0.2.3`
+`pip install django-db-cascade-5`
+
+Supports Django 5 only.
+
+Note: this package is expected to become obsolete starting with Django 6.1.
 
 settings.py:
+
 ```
 DATABASES = {
     'default': {
-        'ENGINE': 'django_db_cascade.backends.postgresql_psycopg2',
+        'ENGINE': 'django_db_cascade.backends.postgresql',
         # ... etc ...
     }
 }
 ```
 
 ### Usage
+
 ```
 from django.db import models
 from django_db_cascade.fields import ForeignKey, OneToOneField
@@ -27,26 +31,30 @@ class Thing(Common):
 ```
 
 ### Caveats
+
 - DB_CASCADE only supports Postgres
 - DB_CASCADE does not support django on_delete signals
 - DB_CASCADE will not cascade delete multiple inherited tables as expected
-- DB_CASCADE will not trigger CASCADE on another model. E.g. Model A points to model B, via DB_CASCADE. Model B points to model C, via CASCADE. A will cascade delete B, B will django delete C, but __deleting A will not delete C__!
+- DB_CASCADE will not trigger CASCADE on another model. E.g. Model A points to model B, via DB_CASCADE. Model B points to model C, via CASCADE. A will cascade delete B, B will django delete C, but **deleting A will not delete C**!
 - DB_CASCADE on a ManyToMany of A <---> B, only A_B set records will be cascade deleted (deleting A will not delete B)
 
 ### How it works
+
 1. Minimal subclassing of the django postgresql backend and the django ForeignKey field
-3. Added a new possible value for ForeignKey's on_delete kwarg, called DB_CASCADE
-4. When you use DB_CASCADE, the migration framework will recognize a change, and write new sql
-6. example SQL generated:
-    ```
-    ALTER TABLE mytable ADD CONSTRAINT myconstraint FOREIGN KEY (mycolumn)
-    REFERENCES myothertable myothercolumn ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
-    ```
+2. Added a new possible value for ForeignKey's on_delete kwarg, called DB_CASCADE
+3. When you use DB_CASCADE, the migration framework will recognize a change, and write new sql
+4. example SQL generated:
+   ```
+   ALTER TABLE mytable ADD CONSTRAINT myconstraint FOREIGN KEY (mycolumn)
+   REFERENCES myothertable myothercolumn ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+   ```
 
 ### Future proof
+
 If, and when, DB_CASCADE ever gets into django, editing these generated migrations should be very easy.
 
 Generated migrations:
+
 ```
 migrations.AlterField(
     model_name='modelname',
@@ -56,6 +64,7 @@ migrations.AlterField(
 ```
 
 Changing them over, if django ever handles DB_CASCADE natively, might look like:
+
 ```
 migrations.AlterField(
     model_name='modelname',
@@ -65,5 +74,6 @@ migrations.AlterField(
 ```
 
 ### Ticket
+
 The ticker where django has discussed bringing DB_CASCADE to django:
 https://code.djangoproject.com/ticket/21961
